@@ -5,23 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uncensored AI Chatbot</title>
     <style>
-        body { background-color: black; color: #0ff; font-family: 'Courier New', monospace; padding: 20px; }
-        input, button { padding: 10px; width: 100%; }
-        #output { white-space: pre-wrap; margin-top: 20px; background: #111; padding: 10px; }
+        body {
+            background-color: black;
+            color: #0ff;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+        }
+        input, button {
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+            background: #111;
+            border: 1px solid #0ff;
+            color: #0ff;
+        }
+        button:hover {
+            background: #0ff;
+            color: black;
+        }
+        #output {
+            white-space: pre-wrap;
+            margin-top: 20px;
+            background: #111;
+            padding: 10px;
+            border: 1px solid #0ff;
+        }
     </style>
 </head>
 <body>
-    <h1>Uncensored AI Chatbot</h1>
-    <input type="text" id="prompt" placeholder="Ask me anything...">
-    <button onclick="sendPrompt()">Send</button>
-    <div id="output"></div>
 
-    <script>
-        const API_URL = 'https://api-inference.huggingface.co/models/TheBloke/Wizard-Vicuna-13B-Uncensored';
-        const API_KEY = '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'; // Replace with your Hugging Face API key
+<script>
+  const password = "mypassword"; // Change this to your desired password
+  const userInput = prompt("Enter password to access:");
+  if (userInput !== password) {
+      document.body.innerHTML = "<h2 style='color: red;'>Access Denied</h2>";
+  }
+</script>
 
-        async function sendPrompt() {
-            const prompt = document.getElementById("prompt").value;
+<h1>Uncensored AI Chatbot</h1>
+<input type="text" id="prompt" placeholder="Ask me anything...">
+<button onclick="sendPrompt()">Send</button>
+<div id="output"></div>
+
+<script>
+    const API_URL = 'https://api-inference.huggingface.co/models/TheBloke/Wizard-Vicuna-13B-Uncensored';
+    const API_KEY = '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'; // your actual token
+
+    async function sendPrompt() {
+        const prompt = document.getElementById("prompt").value;
+        const output = document.getElementById("output");
+        output.textContent = "Thinking...";
+
+        try {
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
@@ -32,8 +67,16 @@
             });
 
             const data = await response.json();
-            document.getElementById("output").textContent = data.generated_text;
+            if (data.error) {
+                output.textContent = "Error: " + data.error;
+            } else {
+                output.textContent = data[0].generated_text;
+            }
+        } catch (err) {
+            output.textContent = "Request failed: " + err.message;
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
