@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncensored AI Chatbot</title>
+    <style>
+        body { background-color: black; color: #0ff; font-family: 'Courier New', monospace; padding: 20px; }
+        input, button { padding: 10px; width: 100%; }
+        #output { white-space: pre-wrap; margin-top: 20px; background: #111; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Uncensored AI Chatbot</h1>
+    <input type="text" id="prompt" placeholder="Ask me anything...">
+    <button onclick="sendPrompt()">Send</button>
+    <div id="output"></div>
+
+    <script>
+        const API_URL = 'https://api-inference.huggingface.co/models/TheBloke/Wizard-Vicuna-13B-Uncensored';
+        const API_KEY = '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'; // Replace with your Hugging Face API key
+
+        async function sendPrompt() {
+            const prompt = document.getElementById("prompt").value;
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputs: prompt })
+            });
+
+            const data = await response.json();
+            document.getElementById("output").textContent = data.generated_text;
+        }
+    </script>
+</body>
+</html>
